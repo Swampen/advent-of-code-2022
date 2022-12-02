@@ -5,7 +5,33 @@ def get_input(file):
 
 
 def second_star(rounds):
-    return
+    totalScore = 0
+    for round in rounds:
+        opponentMove = round[0]
+        outcome = round[1]
+        if outcome == "X":
+            if opponentMove == "A":
+                totalScore += get_score(round[0], "Z")
+            if opponentMove == "B":
+                totalScore += get_score(round[0], "X")
+            if opponentMove == "C":
+                totalScore += get_score(round[0], "Y")
+        elif outcome == "Y":
+            if opponentMove == "A":
+                totalScore += get_score(round[0], "X")
+            if opponentMove == "B":
+                totalScore += get_score(round[0], "Y")
+            if opponentMove == "C":
+                totalScore += get_score(round[0], "Z")
+        elif outcome == "Z":
+            if opponentMove == "A":
+                totalScore += get_score(round[0], "Y")
+            if opponentMove == "B":
+                totalScore += get_score(round[0], "Z")
+            if opponentMove == "C":
+                totalScore += get_score(round[0], "X")
+
+    return totalScore
 
 
 def first_star(rounds):
