@@ -9,8 +9,18 @@ def split_string(string):
     return string[:int(len(string) / 2)], string[int(len(string) / 2):]
 
 
-def second_star():
-    return
+def second_star(rucksacks: List[str]):
+    found = []
+    for i, rucksack in enumerate(rucksacks):
+        if i % 3 != 0:
+            continue
+        first, second, third = rucksacks[i:i+3]
+        for x in third:
+            if first.find(x) != -1 and second.find(x) != -1:
+                found.append(x)
+                break
+
+    return calculate_score(found)
 
 
 def first_star(rucksacks: List[str]):
@@ -40,4 +50,4 @@ if __name__ == "__main__":
     problem = get_input('input.txt')
     print(problem)
     print("First star:", first_star(problem))
-    print("Second star:", second_star())
+    print("Second star:", second_star(problem))
