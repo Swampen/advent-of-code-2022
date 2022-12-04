@@ -10,8 +10,15 @@ def format_range(strings):
     return [int(strings[0]), int(strings[1])]
 
 
-def second_star():
-    return
+def second_star(pairs: List[Tuple[List[int], List[int]]]):
+    doOverlap = 0
+    for first, second in pairs:
+        firstStartOverlap = first[0] - second[1]
+        firstEndOverlap = first[1] - second[0]
+        if firstStartOverlap <= 0 <= firstEndOverlap:
+            doOverlap += 1
+
+    return doOverlap
 
 
 def first_star(pairs: List[Tuple[List[int], List[int]]]):
@@ -28,4 +35,4 @@ def first_star(pairs: List[Tuple[List[int], List[int]]]):
 if __name__ == "__main__":
     problem = get_input('input.txt')
     print("First star:", first_star(problem))
-    print("Second star:", second_star())
+    print("Second star:", second_star(problem))
