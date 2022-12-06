@@ -3,7 +3,14 @@ def get_input(file):
 
 
 def second_star(sequence):
-    return
+    start = 0
+    size = 14
+    for i, char in enumerate(sequence):
+        subset = set(sequence[i:i + size])
+        if len(subset) == size:
+            start = i + size
+            break
+    return start
 
 
 def first_star(sequence):
