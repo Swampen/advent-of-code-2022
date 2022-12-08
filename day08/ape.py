@@ -6,7 +6,53 @@ def get_input(file):
 
 
 def second_star(trees):
-    return
+    highest = 0
+    for row in range(1, len(trees) - 1):
+        for column in range(1, len(trees[row]) - 1):
+            treeScenicScore = calculate_scenic_score(row, column, trees)
+            if treeScenicScore > highest:
+                highest = treeScenicScore
+    return highest
+
+
+def calculate_scenic_score(row, column, trees):
+    tree = trees[row][column]
+    i = row - 1
+    uscore = 0
+    # Up
+    while i >= 0:
+        uscore += 1
+        if tree <= trees[i][column]:
+            break
+        i -= 1
+
+    i = row + 1
+    dscore = 0
+    # Down
+    while i < len(trees):
+        dscore += 1
+        if tree <= trees[i][column]:
+            break
+        i += 1
+
+    i = column - 1
+    lscore = 0
+    # Left
+    while i >= 0:
+        lscore += 1
+        if tree <= trees[row][i]:
+            break
+        i -= 1
+
+    i = column + 1
+    rscore = 0
+    # Right
+    while i < len(trees[row]):
+        rscore += 1
+        if tree <= trees[row][i]:
+            break
+        i += 1
+    return uscore * dscore * lscore * rscore
 
 
 def is_visible_from_edge(row, column, trees):
