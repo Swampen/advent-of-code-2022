@@ -1,23 +1,45 @@
 import copy
 
+
 def get_input(file):
     return [line.split(" ") for line in open(file).read().splitlines()]
 
 
-def second_star(moves):
-    tailPos = (0, 0)
-    tailPlaces = [tailPos]
-    ropePos = [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
-    ropePreviousPos = [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
-    x, y = 0, 0
-    for move in moves:
+def move_knot(this, prev):
+    x = this[0] - prev[0]
+    y = this[1] - prev[1]
+    if abs(x) <= 1 and abs(y) <= 1:
+        return prev
+    elif abs(x) >= 2 and abs(y) >= 2:
+        if prev[0] < this[0]:
+            x = this[0] - 1
+        else:
+            x = this[0] + 1
+        if prev[1] < this[1]:
+            y = this[1] - 1
+        else:
+            y = this[1] + 1
+        return x, y
+    elif abs(x) >= 2:
+        if prev[0] < this[0]:
+            x = this[0] - 1
+        else:
+            x = this[0] + 1
+        return x, this[1]
+    elif abs(y) >= 2:
+        if prev[1] < this[1]:
+            y = this[1] - 1
+        else:
+            y = this[1] + 1
+        return this[0], y
 
-        for i in range(int(move[1])):
-            print(ropePreviousPos)
-            print(ropePos)
-            print()
-            headPreviousPos = (x, y)
-            ropePreviousPos = copy.deepcopy(ropePos)
+
+def second_star(moves):
+    ropePos = [(0, 0) for _ in range(9)]
+    x, y = 0, 0
+    tailPlaces = {(x, y)}
+    for move in moves:
+        for _ in range(int(move[1])):
             match move[0]:
                 case "R":
                     x += 1
@@ -27,13 +49,11 @@ def second_star(moves):
                     y += 1
                 case "D":
                     y -= 1
-            ropePos[0] = (x, y)
+            ropePos[0] = move_knot((x, y), ropePos[0])
             for i, knot in enumerate(ropePos):
                 if i == 0: continue
-                if abs(ropePos[i - 1][0] - knot[0]) > 1 or abs(ropePos[i - 1][1] - knot[1]) > 1:
-                    ropePos[i] = ropePreviousPos[i - 1]
-                    if i == 9 and knot not in tailPlaces:
-                        tailPlaces.append(tailPos)
+                ropePos[i] = move_knot(ropePos[i - 1], knot)
+            tailPlaces.add(ropePos[-1])
     return len(tailPlaces)
 
 
@@ -61,6 +81,6 @@ def first_star(moves):
 
 
 if __name__ == "__main__":
-    problem = get_input('test.txt')
+    problem = get_input('input.txt')
     print("First star:", first_star(problem))
     print("Second star:", second_star(problem))
