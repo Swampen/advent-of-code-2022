@@ -1,4 +1,5 @@
 import math
+import copy
 
 
 def get_input(file):
@@ -25,7 +26,37 @@ def get_input(file):
 
 
 def second_star(monkeys):
-    return
+    currentRound = 1
+    breakRound = 10000
+    divs = []
+    for data in monkeys.values():
+        divs.append(data["test"])
+    lcm = math.lcm(*divs)
+    while True:
+        for data in monkeys.values():
+            if len(data["items"]) == 0:
+                continue
+            for item in data["items"]:
+                data["count"] += 1
+                worryLevel = eval(data["operation"].replace("old", f"{item}"))
+                # modify
+                worryLevel = worryLevel % lcm
+                if worryLevel % data["test"] == 0:
+                    monkeys[data["true"]]["items"].append(worryLevel)
+                else:
+                    monkeys[data["false"]]["items"].append(worryLevel)
+            data["items"] = []
+        if currentRound == breakRound:
+            largest = [0, 0]
+            for monkey, data in monkeys.items():
+                for i, x in enumerate(largest):
+                    if data["count"] > x:
+                        largest[i] = data["count"]
+                        break
+                largest.sort()
+            break
+        currentRound += 1
+    return math.prod(largest)
 
 
 def first_star(monkeys):
@@ -58,5 +89,6 @@ def first_star(monkeys):
 
 if __name__ == "__main__":
     problem = get_input("input.txt")
+    problem2 = copy.deepcopy(problem)
     print("First star:", first_star(problem))
-    print("Second star:", second_star(problem))
+    print("Second star:", second_star(problem2))
