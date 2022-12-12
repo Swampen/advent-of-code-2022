@@ -31,10 +31,10 @@ def first_star(elevation):
     for i, row in enumerate(elevation):
         for j, column in enumerate(row):
             if chr(column + 96) == "S":
-                elevation[i][j] = 1
+                elevation[i][j] = ord("a") - 96
                 start = (i, j)
             if chr(column + 96) == "E":
-                elevation[i][j] = ord("z") + 1 - 96
+                elevation[i][j] = ord("z") - 96
                 end = (i, j)
     m = []
     for i in range(len(elevation)):
@@ -46,28 +46,7 @@ def first_star(elevation):
     while m[end[0]][end[1]] == 0:
         k += 1
         make_step(k, m, elevation)
-    print(k)
-    i, j = end
-    k = m[i][j]
-    path = [(i, j)]
-    while k > 1:
-        if i > 0 and m[i - 1][j] == k - 1:
-            i, j = i - 1, j
-            path.append((i, j))
-            k -= 1
-        elif j > 0 and m[i][j - 1] == k - 1:
-            i, j = i, j - 1
-            path.append((i, j))
-            k -= 1
-        elif i < len(m) - 1 and m[i + 1][j] == k - 1:
-            i, j = i + 1, j
-            path.append((i, j))
-            k -= 1
-        elif j < len(m[i]) - 1 and m[i][j + 1] == k - 1:
-            i, j = i, j + 1
-            path.append((i, j))
-            k -= 1
-    return len(path) - 1
+    return k
 
 
 if __name__ == "__main__":
