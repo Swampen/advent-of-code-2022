@@ -7,22 +7,21 @@ def second_star(elevation):
 
 
 def make_step(k, m, e):
-    current = 0
     for i in range(len(m)):
         for j in range(len(m[i])):
             if m[i][j] == k:
                 current = e[i][j]
                 if i > 0 and m[i - 1][j] == 0 and \
-                        e[i - 1][j] - current in (1, 0):
+                        e[i - 1][j] - current <= 1:
                     m[i - 1][j] = k + 1
                 if j > 0 and m[i][j - 1] == 0 and \
-                        e[i][j - 1] - current in (1, 0):
+                        e[i][j - 1] - current <= 1:
                     m[i][j - 1] = k + 1
                 if i < len(m) - 1 and m[i + 1][j] == 0 and \
-                        e[i + 1][j] - current in (1, 0):
+                        e[i + 1][j] - current <= 1:
                     m[i + 1][j] = k + 1
                 if j < len(m[i]) - 1 and m[i][j + 1] == 0 and \
-                        e[i][j + 1] - current in (1, 0):
+                        e[i][j + 1] - current <= 1:
                     m[i][j + 1] = k + 1
 
 
@@ -32,7 +31,7 @@ def first_star(elevation):
     for i, row in enumerate(elevation):
         for j, column in enumerate(row):
             if chr(column + 96) == "S":
-                elevation[i][j] = 0
+                elevation[i][j] = 1
                 start = (i, j)
             if chr(column + 96) == "E":
                 elevation[i][j] = ord("z") + 1 - 96
@@ -47,7 +46,7 @@ def first_star(elevation):
     while m[end[0]][end[1]] == 0:
         k += 1
         make_step(k, m, elevation)
-
+    print(k)
     i, j = end
     k = m[i][j]
     path = [(i, j)]
