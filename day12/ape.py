@@ -1,9 +1,35 @@
+import copy
+
+
 def get_input(file):
     return [[ord(letter) - 96 for letter in list(line)] for line in open(file).read().splitlines()]
 
 
 def second_star(elevation):
-    return
+    shortest = 99999
+    for i, row in enumerate(elevation):
+        for j, column in enumerate(row):
+            if chr(column + 96) == "S":
+                elevation[i][j] = ord("a") - 96
+            if chr(column + 96) == "E":
+                elevation[i][j] = ord("z") - 96
+                end = (i, j)
+    ma = []
+    for i in range(len(elevation)):
+        ma.append([])
+        for j in range(len(elevation[i])):
+            ma[-1].append(0)
+    for row in range(len(elevation)):
+        start = (row, 0)
+        m = copy.deepcopy(ma)
+        m[start[0]][start[1]] = 1
+        k = 0
+        while m[end[0]][end[1]] == 0:
+            k += 1
+            make_step(k, m, elevation)
+        if k < shortest:
+            shortest = k
+    return shortest
 
 
 def make_step(k, m, e):
@@ -51,5 +77,5 @@ def first_star(elevation):
 
 if __name__ == "__main__":
     problem = get_input("input.txt")
-    print("First star:", first_star(problem))
-    print("Second star:", second_star(problem))
+    print("First star:", first_star(copy.deepcopy(problem)))
+    print("Second star:", second_star(copy.deepcopy(problem)))
