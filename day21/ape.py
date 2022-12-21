@@ -14,7 +14,18 @@ def get_input(file):
 
 
 def second_star(dictionary):
-    return
+    number = 0
+    for i in range(3093175982400, 100000000000000, 1):
+        dictionary_copy = copy.deepcopy(dictionary)
+        dictionary_copy["humn"] = i
+        get_number(dictionary_copy, "root")
+        print(dictionary_copy["root"], i)
+        if dictionary_copy["root"][0] == dictionary_copy["root"][2]:
+            number = i
+            break
+
+
+    return number
 
 
 def first_star(dictionary):
@@ -33,6 +44,6 @@ def get_number(dictionary, key):
 
 
 if __name__ == "__main__":
-    problem = get_input("test.txt")
+    problem = get_input("input.txt")
     print("First star:", first_star(copy.deepcopy(problem)))
     print("Second star:", second_star(problem))
