@@ -19,11 +19,9 @@ def second_star(dictionary):
         dictionary_copy = copy.deepcopy(dictionary)
         dictionary_copy["humn"] = i
         get_number(dictionary_copy, "root")
-        print(dictionary_copy["root"], i)
         if dictionary_copy["root"][0] == dictionary_copy["root"][2]:
             number = i
             break
-
 
     return number
 
