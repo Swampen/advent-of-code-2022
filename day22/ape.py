@@ -25,8 +25,93 @@ def get_input(file):
     return d
 
 
-def second_star(dictionary):
+def get_next(x, y, m):
     return
+
+
+def second_star(dictionary):
+    size = 4
+    currentDirection = 0
+    x, y = 0, 0
+    m = dictionary["map"]
+    for i, col in enumerate(m[0]):
+        if col == ".":
+            x = i
+            break
+    for i, steps in enumerate(dictionary["steps"]):
+        currentDirection = turn(currentDirection, dictionary["dir"][i])
+        currentSteps = 0
+        while currentSteps != steps:
+            # Right
+            if currentDirection == 0:
+                nextStep = (x + 1) % len(m[y])
+                if m[y][nextStep] == "#":
+                    break
+                elif m[y][nextStep] == ".":
+                    x = nextStep
+                    currentSteps += 1
+                else:
+                    temp = nextStep
+                    while m[y][temp] == " ":
+                        temp = (temp + 1) % len(m[y])
+                    if m[y][temp] == "#":
+                        break
+                    else:
+                        x = temp
+                        currentSteps += 1
+            # Left
+            elif currentDirection == 2:
+                nextStep = (x - 1) % len(m[y])
+                if m[y][nextStep] == "#":
+                    break
+                elif m[y][nextStep] == ".":
+                    x = nextStep
+                    currentSteps += 1
+                else:
+                    temp = nextStep
+                    while m[y][temp] == " ":
+                        temp = (temp - 1) % len(m[y])
+                    if m[y][temp] == "#":
+                        break
+                    else:
+                        x = temp
+                        currentSteps += 1
+            # Down
+            elif currentDirection == 1:
+                nextStep = (y + 1) % len(m)
+                if m[nextStep][x] == "#":
+                    break
+                elif m[nextStep][x] == ".":
+                    y = nextStep
+                    currentSteps += 1
+                else:
+                    temp = nextStep
+                    while m[temp][x] == " ":
+                        temp = (temp + 1) % len(m)
+                    if m[temp][x] == "#":
+                        break
+                    else:
+                        y = temp
+                        currentSteps += 1
+            # Up
+            elif currentDirection == 3:
+                nextStep = (y - 1) % len(m)
+                if m[nextStep][x] == "#":
+                    break
+                elif m[nextStep][x] == ".":
+                    y = nextStep
+                    currentSteps += 1
+                else:
+                    temp = nextStep
+                    while m[temp][x] == " ":
+                        temp = (temp - 1) % len(m)
+                    if m[temp][x] == "#":
+                        break
+                    else:
+                        y = temp
+                        currentSteps += 1
+
+    return 1000 * (y + 1) + 4 * (x + 1) + currentDirection
 
 
 def turn(currentDirection, direction):
