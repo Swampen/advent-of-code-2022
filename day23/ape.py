@@ -13,7 +13,61 @@ def get_input(file):
 
 
 def second_star(positions):
-    return
+    nOrder = 0
+    sOrder = 1
+    wOrder = 2
+    eOrder = 3
+    currentRound = 0
+    while True:
+        currentPos = []
+        newPos = []
+        dupList = []
+        for x, y in positions:
+            n = {(x - 1, y - 1), (x, y - 1), (x + 1, y - 1)}
+            s = {(x - 1, y + 1), (x, y + 1), (x + 1, y + 1)}
+            w = {(x - 1, y - 1), (x - 1, y), (x - 1, y + 1)}
+            e = {(x + 1, y - 1), (x + 1, y), (x + 1, y + 1)}
+            directions = [("n", n, nOrder), ("s", s, sOrder), ("w", w, wOrder), ("e", e, eOrder)]
+            directions.sort(key=lambda item: item[2])
+            surroundings = n | s | w | e
+            # No other elf around
+            pos = (x, y)
+            currentPos.append(pos)
+            if not surroundings & positions:
+                newPos.append(pos)
+                continue
+            for d, s, _ in directions:
+                if not s & positions:
+                    match d:
+                        case "n":
+                            pos = (x, y - 1)
+                            break
+                        case "s":
+                            pos = (x, y + 1)
+                            break
+                        case "w":
+                            pos = (x - 1, y)
+                            break
+                        case "e":
+                            pos = (x + 1, y)
+                            break
+
+            if pos in newPos:
+                dupList.append(pos)
+            newPos.append(pos)
+        currentRound += 1
+        if newPos == currentPos:
+            break
+        for i, pos in enumerate(newPos):
+            if pos in dupList:
+                newPos[i] = currentPos[i]
+        positions = set(newPos)
+        nOrder = (nOrder - 1) % 4
+        sOrder = (sOrder - 1) % 4
+        wOrder = (wOrder - 1) % 4
+        eOrder = (eOrder - 1) % 4
+
+    return currentRound
 
 
 def visualize(positions: set):
