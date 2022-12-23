@@ -4,7 +4,34 @@ def get_input(file):
 
 
 def second_star(coordinates):
-    return
+    walls = get_walls(coordinates)
+    max_y = max(walls, key=lambda item: item[1])[1]
+    for x in range(0, 1000):
+        walls.add((x, max_y + 2))
+    sandxStart, sandyStart = 500, 0
+    sands = set()
+    sandStopped = False
+    while not sandStopped:
+        sandx, sandy = sandxStart, sandyStart
+        while True:
+            if (sandx, sandy + 1) not in (walls | sands):
+                sandy += 1
+                continue
+            else:
+                if (sandx - 1, sandy + 1) not in (walls | sands):
+                    sandx -= 1
+                    sandy += 1
+                    continue
+                elif (sandx + 1, sandy + 1) not in (walls | sands):
+                    sandx += 1
+                    sandy += 1
+                    continue
+            sands.add((sandx, sandy))
+            if (sandx, sandy) == (sandxStart, sandyStart):
+                sandStopped = True
+                break
+            break
+    return len(sands)
 
 
 def get_walls(coordinates):
@@ -35,7 +62,7 @@ def first_star(coordinates):
         while True:
             if (sandx, sandy + 1) not in (walls | sands):
                 sandy += 1
-                if sandy > max_y+1:
+                if sandy > max_y + 1:
                     sandIsFalling = True
                     break
                 continue
