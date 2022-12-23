@@ -1,7 +1,3 @@
-import json
-import copy
-
-
 def get_input(file):
     return [[[int(x) for x in coordinate.split(",")] for coordinate in line.split(" -> ")] for line in
             open(file).read().splitlines()]
@@ -11,63 +7,54 @@ def second_star(coordinates):
     return
 
 
-def draw_walls(coordinates):
-    furthestRight = 500
-    furthestLeft = 500
-    deepest = 0
-    for wall in coordinates:
-        for pos in wall:
-            x, y = pos
-            if x > furthestRight:
-                furthestRight = x
-            if x < furthestLeft:
-                furthestLeft = x
-            if y > deepest:
-                deepest = y
-    drawing = []
-    for i in range(deepest + 1):
-        drawing.append([0] * (furthestRight - furthestLeft + 1))
+def get_walls(coordinates):
+    walls = set()
     for wall in coordinates:
         for i in range(len(wall) - 1):
             x1, y1 = wall[i]
             x2, y2 = wall[i + 1]
             while x1 != x2:
-                drawing[y1][x1 - furthestLeft] = 1
+                walls.add((x1, y1))
                 x1 = x1 - 1 if x1 > x2 else x1 + 1
+            walls.add((x1, y1))
             while y1 != y2:
-                drawing[y1][x1 - furthestLeft] = 1
+                walls.add((x1, y1))
                 y1 = y1 - 1 if y1 > y2 else y1 + 1
-
-    return drawing, furthestLeft
+            walls.add((x1, y1))
+    return walls
 
 
 def first_star(coordinates):
-    """
-    Sand: Down, down-left, down-right
-    """
-    drawing, furthestLeft = draw_walls(coordinates)
-    sandxStart, sandyStart = 500 - furthestLeft, 0
-    sandx, sandy = sandxStart, sandyStart
-    drawing[sandy][sandx] = 2
+    walls = get_walls(coordinates)
+    max_y = max(walls, key=lambda item: item[1])[1]
+    sandxStart, sandyStart = 500, 0
+    sands = set()
     sandIsFalling = False
     while not sandIsFalling:
-        sandy += 1
-        while drawing[sandy][sandx] not in (1, 2):
-            sandy += 1
-        if drawing[sandy][sandx] == 1:
-            drawing[sandy - 1][sandx] = 2
-        elif drawing[sandy][sandx] == 2:
-            if drawing[sandy][sandx - 1] not in (1, 2):
-                drawing[sandy][sandx - 1] = 2
-            elif drawing[sandy][sandx + 1] not in (1, 2):
-                drawing[sandy][sandx + 1] = 2
-            else:
-                drawing[sandy-1][sandx] = 2
         sandx, sandy = sandxStart, sandyStart
-    return drawing[0]
+        while True:
+            if (sandx, sandy + 1) not in (walls | sands):
+                sandy += 1
+                if sandy > max_y+1:
+                    sandIsFalling = True
+                    break
+                continue
+            else:
+                if (sandx - 1, sandy + 1) not in (walls | sands):
+                    sandx -= 1
+                    sandy += 1
+                    continue
+                elif (sandx + 1, sandy + 1) not in (walls | sands):
+                    sandx += 1
+                    sandy += 1
+                    continue
+
+            sands.add((sandx, sandy))
+            break
+    return len(sands)
 
 
 if __name__ == "__main__":
-    problem = get_input("test.txt")
+    problem = get_input("input.txt")
     print("First star:", first_star(problem))
     print("Second star:", second_star(problem))
