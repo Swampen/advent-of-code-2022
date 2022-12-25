@@ -30,7 +30,17 @@ def get_input(file):
 
 
 def second_star(positions):
-    return
+    first = first_star(positions)
+    start = positions["start"]
+    end = positions["end"]
+    positions["start"] = end
+    positions["end"] = start
+    second = first_star(positions)
+    positions["start"] = start
+    positions["end"] = end
+    third = first_star(positions)
+    return first + second + third
+
 
 def first_star(positions):
     start = positions["start"]
@@ -91,30 +101,17 @@ def first_star(positions):
             if canMove(u, nextBlizzards, nextPositions, width, height, end):
                 nextPositions.append(u)
         minutes += 1
-        # print(minutes)
-        # for y in range(height):
-        #     for x in range(width):
-        #         pos = (x, y)
-        #         if pos in nextPositions:
-        #             print("E", end="")
-        #         elif pos in nextRight:
-        #             print(">", end="")
-        #         elif pos in nextDown:
-        #             print("v", end="")
-        #         elif pos in nextLeft:
-        #             print("<", end="")
-        #         elif pos in nextUp:
-        #             print("^", end="")
-        #         else:
-        #             print(".", end="")
-        #     print("")
-        if end in nextPositions:
-            break
         right = copy.deepcopy(nextRight)
         down = copy.deepcopy(nextDown)
         left = copy.deepcopy(nextLeft)
         up = copy.deepcopy(nextUp)
         currentPositions = copy.deepcopy(nextPositions)
+        if end in nextPositions:
+            positions["right"] = right
+            positions["down"] = down
+            positions["left"] = left
+            positions["up"] = up
+            break
 
     return minutes
 
@@ -135,6 +132,6 @@ def canMove(position, blizzards, newPositions, width, height, end):
 
 
 if __name__ == "__main__":
-    problem = get_input("test.txt")
-    print("First star:", first_star(problem))
+    problem = get_input("input.txt")
+    print("First star:", first_star(copy.deepcopy(problem)))
     print("Second star:", second_star(problem))
