@@ -15,7 +15,39 @@ def get_input(file):
 
 
 def second_star(coordinates):
-    return
+    sensors = coordinates["sensors"]
+    beacons = coordinates["beacons"]
+    maxY = 4000000
+    pos = (0, 0)
+    for y in range(maxY + 1):
+        ranges = []
+        for i in range(len(beacons)):
+            b = beacons[i]
+            s = sensors[i]
+            length = abs(b[0] - s[0]) + abs(b[1] - s[1])
+            offset = length - abs(s[1] - y)
+            if offset < 0:
+                continue
+
+            a = s[0] - offset
+            b = s[0] + offset
+
+            ranges.append((a, b))
+        ranges.sort()
+
+        rowRanges = []
+        for x1, x2 in ranges:
+            if len(rowRanges) == 0:
+                rowRanges.append([x1, x2])
+            elif x1 > rowRanges[-1][1] + 1:
+                rowRanges.append([x1, x2])
+            elif x2 > rowRanges[-1][1]:
+                rowRanges[-1][1] = x2
+        if len(rowRanges) > 1:
+            pos = (rowRanges[-1][0] - 1, y)
+            break
+
+    return 4000000 * pos[0] + pos[1]
 
 
 def first_star(coordinates):
@@ -37,7 +69,7 @@ def first_star(coordinates):
 
         if b[1] == checkLine:
             notPossible.add(b[0])
-        for j in range(a, b+1):
+        for j in range(a, b + 1):
             notBeacon.add(j)
 
     return len(notBeacon - notPossible)
